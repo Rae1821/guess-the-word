@@ -29,7 +29,7 @@ const word = "magnolia";
     const placeholderLetters = [];
         for (const letter of word) {
          console.log(letter);
-         placeholderLetters.push("*");
+         //placeholderLetters.push("*");
          placeholderLetters.push("●");
     }
 
@@ -41,7 +41,22 @@ button.addEventListener("click", function (e) {
     let inputValue = textInput.value;
     console.log(inputValue);
     textInput.value = " ";
-    
+    message.innerText = " ";
+    validateInput(inputValue);
+    const inputResult = validateInput;
+    console.log(inputResult);
 });
 
+const validateInput = function(input) {
+    const acceptedLetter = /[a-zA-Z]/; //<-- a regular expression
+    if (textInput === " ") {
+        return `Please input a letter`;
+    } else if (textInput > acceptedLetter) {
+        return `You can only guess one letter at a time`;
+    } else if (textInput !== acceptedLetter.match(/[a-zA-Z]/)) {
+        return `That is not a letter. Try again`;
+    } else {
+        return input;
+    }
+};
 
