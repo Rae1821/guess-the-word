@@ -26,7 +26,7 @@ const hiddenButton = document.querySelector(".play-again");
 
 let word = "magnet";
 
-const guessedLetters = [];
+let guessedLetters = [];
 
 //Use let instead of const because the value of remainingGuesses will change over time
 let remainingGuesses = 8;
@@ -160,11 +160,13 @@ const countRemainingGuesses = function(guess) {
     }
     if (remainingGuesses === 0) {
         message.innerHTML = `Game Over! The word was <span class="highlight">${word}</span>`;
+        startOver();
     } else if (remainingGuesses === 1) {
         remainingSpan.innerText = `${remainingGuesses} guess`;
     } else {
         remainingSpan.innerText = `${remainingGuesses} guesses`;
     }
+   
 };
 
     
@@ -174,7 +176,33 @@ const guessIsCorrect = function () {
     if (word.toUpperCase() === wordInProgress.innerText) {
         message.classList.add(".win");
         message.innerHTML = `<p class="highlight"> You guessed the correct word! Congrats!</p>`;
+        startOver();
     }
+    
 };
 
 
+const startOver = function () {
+    button.classList.add("hide");
+    remaining.classList.add("hide");
+    listOfLetters.classList.add("hide");
+
+    hiddenButton.classList.remove("hide");
+    hiddenButton.classList.add("show");
+};
+
+hiddenButton.addEventListener("click", function () {
+    message.classList.remove(".win");
+    message.innerHTML = " ";
+    listOfLetters.innerHTML = " ";
+
+    remainingGuesses = 6;
+    remaining.innerHTML = `You have <span>${remainingGuesses}</span> guesses remaining.`;
+    guessedLetters = [];
+
+    button.classList.remove("hide");
+    remaining.classList.remove("hide");
+    listOfLetters.classList.remove("hide");
+    hiddenButton.classList.add("hide");
+    getWord();
+});
