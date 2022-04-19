@@ -24,9 +24,27 @@ const message = document.querySelector(".message");
 //The hidden button that will appear prompting the player to play again
 const hiddenButton = document.querySelector(".play-again");
 
-const word = "magnet";
+let word = "magnet";
 
 const guessedLetters = [];
+
+//Use let instead of const because the value of remainingGuesses will change over time
+let remainingGuesses = 8;
+
+
+//Function to get data from a text file & grab a random word
+const getWord = async function () {
+    const res = await fetch ("https://gist.githubusercontent.com/skillcrush-curriculum/7061f1d4d3d5bfe47efbfbcfe42bf57e/raw/5ffc447694486e7dea686f34a6c085ae371b43fe/words.txt");
+    const wordData = await res.text();
+    const wordDataArray = wordData.split("\n");
+    const randomIndex = Math.floor(Math.random() * wordDataArray.length);
+    word = wordDataArray[randomIndex].trim();
+    placeholder(word);
+
+};
+
+getWord();
+
 
 //Function to display symbols as placeholders for the chosen word's letters   
 const placeholder = function (word) {
@@ -39,7 +57,6 @@ const placeholder = function (word) {
     wordInProgress.innerText = placeholderLetters.join("");
 };
 
-placeholder(word);
 
 //Click function for button
 button.addEventListener("click", function (e) {
@@ -88,11 +105,15 @@ const makeGuess = function (guess) {
         message.innerText = "You already guessed that letter silly. Try again";
     } else {
         guessedLetters.push(guess);
-        //Call the showGuessedLetters function so the letter displays when it hasn't been guessed before.
-        showGuessedLetters();
+       console.log(guessedLetters);
+        //Call the countRemainingGuesses function to update the remaining guesses and pass it the letter that the player guessed as an argument.
+        countRemainingGuesses(guess);
+         //Call the showGuessedLetters function so the letter displays when it hasn't been guessed before.
+         showGuessedLetters();
         //Updates the circles to the letters guessed
        updateWordInProgress(guessedLetters);
-    }   console.log(guess);
+
+    } 
 };
 
 //Function to show guessed letters
@@ -127,6 +148,25 @@ const updateWordInProgress = function(guessedLetters) {
    wordInProgress.innerText = updateCharacters.join("");
    guessIsCorrect();
 };
+
+//function to count guesses remaining
+const countRemainingGuesses = function(guess) {
+    const guessedWord = word.toUpperCase();
+    if (!guessedWord.includes(guess)) {
+        message.innerText = `Sorry, the word has no ${guess}`;
+        remainingGuesses -= 1;
+    } else {
+        message.innerText = `Yippee you got a letter! ${guess}`;
+    }
+    if (remainingGuesses === 0) {
+        message.innerHTML = `Game Over! The word was <span class="highlight">${word}</span>`;
+    } else if (remainingGuesses === 1) {
+        remainingSpan.innerText = `${remainingGuesses} guess`;
+    } else {
+        remainingSpan.innerText = `${remainingGuesses} guesses`;
+    }
+};
+
     
 
 //Function to check if the player won
@@ -136,4 +176,5 @@ const guessIsCorrect = function () {
         message.innerHTML = `<p class="highlight"> You guessed the correct word! Congrats!</p>`;
     }
 };
+
 
