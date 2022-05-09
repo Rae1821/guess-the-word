@@ -181,7 +181,7 @@ const guessIsCorrect = function () {
     
 };
 
-
+//Function to hide and show elements
 const startOver = function () {
     button.classList.add("hide");
     remaining.classList.add("hide");
@@ -191,6 +191,7 @@ const startOver = function () {
     hiddenButton.classList.add("show");
 };
 
+//Click event for play again button
 hiddenButton.addEventListener("click", function () {
     message.classList.remove(".win");
     message.innerHTML = " ";
